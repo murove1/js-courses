@@ -1,7 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-
 const Answers = styled.ul`
   display: flex;
   flex-direction: column;
@@ -9,7 +8,6 @@ const Answers = styled.ul`
   padding: 0;
   margin: 0;
 `;
-
 
 const Answer = styled.li`
   display: flex;
@@ -20,7 +18,6 @@ const Answer = styled.li`
   }
 `;
 
-
 const Votes = styled.div`
   display: flex;
   flex-direction: column;
@@ -28,7 +25,6 @@ const Votes = styled.div`
   flex-basis: 10%;
   margin-right: 10px;
 `;
-
 
 const Vote = styled.button`
   display: flex;
@@ -41,34 +37,34 @@ const Vote = styled.button`
   color: #000;
   padding: 3px 5px 3px 8px;
   transition: color, background 50ms;
-  cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 
   &:active {
     color: #fff;
     background: #ff6500;
   }
-  
+
   &[disabled] {
     background: gainsboro;
     color: #0d0045;
   }
-  ${({ up }) => up ? css`
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    border-bottom: 1px solid #000;
-  ` : css`
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    border-top: 1px solid #000;
-  `}
-
-  @media (min-width: 760px) {
+  ${({ up }) =>
+    up
+      ? css`
+          border-top-left-radius: 5px;
+          border-top-right-radius: 5px;
+          border-bottom: 1px solid #000;
+        `
+      : css`
+          border-bottom-left-radius: 5px;
+          border-bottom-right-radius: 5px;
+          border-top: 1px solid #000;
+        `} @media (min-width: 760px) {
     & {
       width: 60%;
     }
   }
 `;
-
 
 const AnswerWrapper = styled.div`
   display: flex;
@@ -87,11 +83,10 @@ const AnswerBottomWrapper = styled.div`
   justify-content: space-between;
 `;
 
-
 const AnswerBottom = styled.span``;
 
-
-const votesByAnswerId = (votes, answerId) => votes.filter(vote => vote.answerId === answerId)
+const votesByAnswerId = (votes, answerId) =>
+  votes.filter(vote => vote.answerId === answerId);
 
 const divideVotes = votes => {
   const positive = votes.filter(vote => vote.isPositive).length;
@@ -99,12 +94,13 @@ const divideVotes = votes => {
   return { positive, negative };
 };
 
+const divideByAnswerId = (votes, answerId) =>
+  divideVotes(votesByAnswerId(votes, answerId));
 
-const divideByAnswerId = (votes, answerId) => divideVotes(votesByAnswerId(votes, answerId));
-
-
-const getAuthor = (users, authorId) => users.find(user => user._id === authorId)
-  || { profile: { fullName: 'Anonymous' } };
+const getAuthor = (users, authorId) =>
+  users.find(user => user._id === authorId) || {
+    profile: { fullName: 'Anonymous' }
+  };
 
 const AnswersList = ({ answers, votes, users, onVote, user }) => (
   <Answers>
@@ -115,10 +111,12 @@ const AnswersList = ({ answers, votes, users, onVote, user }) => (
         <Answer key={answer._id}>
           <Votes>
             <Vote up disabled={!user} onClick={() => onVote(answer._id, true)}>
-              <span>{positive}</span><span>▲</span>
+              <span>{positive}</span>
+              <span>▲</span>
             </Vote>
             <Vote disabled={!user} onClick={() => onVote(answer._id, false)}>
-              <span>{negative}</span><span>▼</span>
+              <span>{negative}</span>
+              <span>▼</span>
             </Vote>
           </Votes>
 
@@ -136,10 +134,9 @@ const AnswersList = ({ answers, votes, users, onVote, user }) => (
             </AnswerBottomWrapper>
           </AnswerWrapper>
         </Answer>
-      )}
-    )}
+      );
+    })}
   </Answers>
 );
-
 
 export default AnswersList;
