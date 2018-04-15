@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Button from "../Buttons/Button/index";
-import QuestionItem from "../QuestionItem/Component";
+import Button from '../Buttons/Button/index';
+import QuestionItem from '../QuestionItem/Component';
 import StyledHeader from '../Common/StyledHeader';
 
 const List = styled.ul`
@@ -10,21 +10,30 @@ const List = styled.ul`
   padding: 0;
 `;
 
-const QuestionList = ({ questions, onIncreaseLimit }) => (
+const LoadingText = styled.h1`
+  font-size: 18px;
+  text-align: center;
+`;
+
+const QuestionList = ({ questions, onLoadMore, isLoading }) => (
   <React.Fragment>
     <StyledHeader>Users ask: ({questions.length})</StyledHeader>
 
     <List>
-      {questions.length > 0 ?
+      {questions.length > 0 ? (
         questions.map(question => (
           <QuestionItem key={question._id} question={question} />
-        )) : (
-          <li>No items found</li>
-        )
-      }
+        ))
+      ) : (
+        <li>No items found</li>
+      )}
     </List>
 
-    <Button onClick={onIncreaseLimit}>More</Button>
+    {isLoading ? (
+      <LoadingText>Loading ...</LoadingText>
+    ) : (
+      <Button onClick={onLoadMore}>More</Button>
+    )}
   </React.Fragment>
 );
 
