@@ -1,19 +1,21 @@
 import { questionTypes } from './';
+import { db } from '../../utils';
 
-const setLoader = (value, name) => ({
+const setLoader = (name, value) => ({
   type: questionTypes.SET_LOADER,
-  // TODO: HOMEWORK 9: complete this action
+  name,
+  value
 });
 
-// THIS IS ASYNC ACTION
-const createQuestion = (db, document, history) => dispatch => {
-  // TODO: HOMEWORK 9: set loader to start loading (true), loader name is questionTypes.CREATE_QUESTION
+const createQuestion = (document, history) => dispatch => {
+  dispatch(setLoader(questionTypes.CREATE_QUESTION, true));
+
   setTimeout(() => {
     // emulating server work
     db.questions.insert(document);
     history.push('/');
+    dispatch(setLoader(questionTypes.CREATE_QUESTION, false));
   }, 1000);
-  // TODO: HOMEWORK 9: set loader to end loading (false)
 };
 
-export default { setLoader, createQuestion }
+export default { setLoader, createQuestion };
