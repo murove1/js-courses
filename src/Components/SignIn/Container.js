@@ -1,29 +1,35 @@
-import { compose, withHandlers } from 'recompose';
+import { compose, withHandlers, branch, renderComponent } from 'recompose';
+import * as R from 'ramda';
 import { connect } from 'react-redux';
-import { userActions } from '../../modules/user';
 import { withInputs } from 'custom-hoc';
-import { withRouter } from 'react-router';
-import { withUser } from '../../utils';
+import { authOperations } from '../../modules/auth';
 import Component from './Component';
+import AppLoader from '../Loaders/AppLoader';
 
+const mapStateToProps = state => ({
+  isLoading: state.auth.isSigningIn,
+  isSignInError: state.auth.isSignInError
+});
+
+const mapDispatchToProps = {
+  signIn: authOperations.signIn
+};
 
 const enhance = compose(
-  // just to get dispatch function below
-  connect(),
+  connect(mapStateToProps, mapDispatchToProps),
+
   withInputs({
-    username: { validate: value => value.length < 20 && value.length > 3 },
+    email: { validate: value => value.length < 20 && value.length > 3 },
     password: { validate: value => value.length < 20 && value.length > 5 }
   }),
-  withRouter,
-  withUser,
-  withHandlers({
-    onSubmit: ({ onUserChange, username, password, history, dispatch }) => () => {
-      dispatch(userActions.signIn({ username }));
-      onUserChange({ username, password, _id: '1' });
 
-      history.push('/');
+  branch(({ isLoading }) => isLoading, renderComponent(AppLoader)),
+
+  withHandlers({
+    onSubmit: props => () => {
+      props.signIn(R.pick(['email', 'password', 'history'], props));
     }
-  }),
+  })
 );
 
 export default enhance(Component);

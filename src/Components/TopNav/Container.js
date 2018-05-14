@@ -2,7 +2,7 @@ import T from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, getContext, withProps } from 'recompose';
 import TopNavComponent from './Component';
-
+import { authOperations } from '../../modules/auth';
 
 const MENU_ITEMS = {
   DEFAULT: [
@@ -16,9 +16,9 @@ const MENU_ITEMS = {
 };
 
 
-const getItemsForUser = ({ onUserChange, user }) => [
-  { label: `Hello, ${user.username}`, to: '' },
-  { label: 'Sing Out', to: '', onClick: () => onUserChange() },
+const getItemsForUser = ({ signOut, user }) => [
+  { label: `Hello, ${user.profile.fullName}`, to: '' },
+  { label: 'Sing Out', to: '', onClick: () => signOut() },
 ];
 
 
@@ -31,12 +31,16 @@ const mapStateToProps = state => ({
   user: state.user
 });
 
+const mapDispatchToProps = {
+  signOut: authOperations.signOut
+};
+
 export default compose(
   getContext({
     user: T.object,
-    onUserChange: T.func,
+    signOut: T.func,
   }),
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   withProps(props => ({
     list: generateList(props),
   })),

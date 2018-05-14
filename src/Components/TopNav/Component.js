@@ -48,7 +48,7 @@ const TopNav = ({ list }) => (
 
 
 TopNav.propTypes = {
-  onUserChange: T.func.isRequired,
+  signOut: T.func.isRequired,
   user: T.object,
   list: T.array.isRequired,
 };
